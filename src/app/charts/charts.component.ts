@@ -384,13 +384,14 @@ onClickEvent({target}){
     var circles = this.chart.selectAll("circle")
     .data(this.datasetA);
     circles.exit().remove();
+    //this.pathUpdate.pathUpdate();
 
     let update = this.chart.selectAll('.dotA')
       .data(this.datasetA);
 
-    // remove exiting bars
+    
     update.exit().remove();
-
+    
 
       update
       .data(this.datasetA)
@@ -398,6 +399,7 @@ onClickEvent({target}){
       .append("circle")
       .attr("class", "dotA")
       .merge(update)
+      .attr("class", "dotA")
       .attr("cx", d => this.xScale(d.x))
       .attr("cy", d => this.yScaleA(d.y))
       .attr("r", 5)
