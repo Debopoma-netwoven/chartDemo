@@ -21,6 +21,7 @@ export class ChartsComponent implements OnInit, OnChanges {
   private xAxis: any;
   private yAxis: any;
   private state:any;
+  private selectedType: string;
  // private margin: any = { top: 30, bottom: 30, left: 30, right: 30 };
  // private chart: any;
  // private width: number;
@@ -39,15 +40,28 @@ export class ChartsComponent implements OnInit, OnChanges {
   private yDomainB: Array<number> = [0, 100];
 
   private datasetA: Array<any> = [
-    { "x": new Date('1/1/2015'), "y": 5 },
-    { "x": new Date('3/4/2015'), "y": 12 },
-    { "x": new Date('8/5/2016'), "y": 20 },
-    { "x": new Date('7/7/2016'), "y": 10 },
-    { "x": new Date('6/9/2015'), "y": 40 },
-    { "x": new Date('7/8/2016'), "y": 30 },
-    { "x": new Date('3/6/2017'), "y": 50 },
-    { "x": new Date('2/7/2017'), "y": 40 },
-    { "x": new Date('10/4/2017'), "y": 55 },
+    { "x": new Date('1/1/2007'), "y": 5 },
+    { "x": new Date('3/4/2008'), "y": 10 },
+    { "x": new Date('6/5/2009'), "y": 12 },
+    { "x": new Date('7/7/2009'), "y": 18 },
+    { "x": new Date('1/1/2010'), "y": 5 },
+    { "x": new Date('3/4/2010'), "y": 10 },
+    { "x": new Date('6/5/2011'), "y": 12 },
+    { "x": new Date('7/7/2011'), "y": 18 },
+    { "x": new Date('9/3/2012'), "y": 23 },
+    { "x": new Date('10/8/2012'), "y": 26 },
+    { "x": new Date('3/4/2013'), "y": 30 },
+    { "x": new Date('5/6/2013'), "y": 34 },
+    { "x": new Date('1/8/2014'), "y": 39 },
+    { "x": new Date('3/1/2014'), "y": 41 },
+    { "x": new Date('8/4/2014'), "y": 42 },
+    { "x": new Date('8/5/2015'), "y": 46},
+    { "x": new Date('9/7/2015'), "y": 49 },
+    { "x": new Date('1/3/2016'), "y": 52},
+    { "x": new Date('3/4/2016'), "y": 55 },
+    { "x": new Date('6/5/2016'), "y": 58 },
+    { "x": new Date('2/8/2017'), "y": 59 },
+    { "x": new Date('5/10/2017'), "y": 60 }
   ];
 
   private datasetB: Array<any> = [
@@ -60,26 +74,35 @@ export class ChartsComponent implements OnInit, OnChanges {
     { "x": 70, "y": 50 },
     { "x": 80, "y": 40 },
     { "x": 90, "y": 60 },
+    { "x": 100, "y": 70 },
+    { "x": 110, "y": 80 },
+    { "x": 120, "y": 90 }
   ];
   constructor() { }
 
   ngOnInit() {
     //debugger;
     this.createChart();
-    if (this.data) {
-      this.updateChart('');
-    }
+    // if (this.data) {
+    //   this.updateChart('');
+    // }
   }
 
   ngOnChanges() {
-    if (this.chart) {
-      this.updateChart('');
-    }
+    // if (this.chart) {
+    //   this.updateChart('');
+    // }
   }
   onChangeEvent({target}){
     //debugger;
+    this.selectedType = target.value;
     this.updateChart(target.value);
 }
+onClickEvent({target}){
+  //debugger;
+  this.updateChartFromButton(this.selectedType,target.textContent);
+}
+
   createChart() {
     //debugger;
     //bar chart
@@ -172,7 +195,7 @@ export class ChartsComponent implements OnInit, OnChanges {
     this.state=this.chart.selectAll(".dotA")
       .data(this.datasetA)
       .enter()
-      //.append("circle")
+      .append("circle")
       .attr("class", "dotA")
       .attr("cx", d => this.xScale(d.x))
       .attr("cy", d => this.yScaleA(d.y))
@@ -189,7 +212,205 @@ export class ChartsComponent implements OnInit, OnChanges {
 
       
   }
+  updateChartFromButton(value,type)
+  {
+    //debugger;
+    let chartVal =this.xDomain[0].getFullYear().toString();
+    if(value !="last3" &&  value !="last5" && value !="last10")
+      {
+        value = chartVal;
+      }
+    if(value=="2007" && type=="Previous")
+      {
+        //this.xDomain = [new Date('1/1/2006'), new Date('12/31/2006')];
+        alert("range exceeded");
+      }
+      else if(value=="2007" && type=="Next")
+        {
+          this.xDomain = [new Date('1/1/2008'), new Date('12/31/2008')];
+        }
+      else if(value=="2008" && type=="Previous")
+        {
+          this.xDomain = [new Date('1/1/2007'), new Date('12/31/2007')];
+        }
+        else if(value=="2008" && type=="Next")
+          {
+            this.xDomain = [new Date('1/1/2009'), new Date('12/31/2009')];
+          }
+        else if(value=="2009" && type=="Previous")
+          {
+            this.xDomain = [new Date('1/1/2008'), new Date('12/31/2008')];
+          }
+          else if(value=="2009" && type=="Next")
+            {
+              this.xDomain = [new Date('1/1/2010'), new Date('12/31/2010')];
+            }
+          else if(value=="2010" && type=="Previous")
+              {
+                this.xDomain = [new Date('1/1/2009'), new Date('12/31/2009')];
+              }
+              else if(value=="2010" && type=="Next")
+                {
+                  this.xDomain = [new Date('1/1/2011'), new Date('12/31/2011')];
+                }
+              else if(value=="2011"  && type=="Previous")
+                {
+                  this.xDomain = [new Date('1/1/2010'), new Date('12/31/2010')];
+                }
+                else if(value=="2011"  && type=="Next")
+                  {
+                    this.xDomain = [new Date('1/1/2012'), new Date('12/31/2012')];
+                  }
+                else if(value=="2012"  && type=="Previous")
+                  {
+                    this.xDomain = [new Date('1/1/2011'), new Date('12/31/2011')];
+                  }
+                  else if(value=="2012"  && type=="Next")
+                    {
+                      this.xDomain = [new Date('1/1/2013'), new Date('12/31/2013')];
+                    }
+                  else if(value=="2013" && type=="Previous")
+                    {
+                      this.xDomain = [new Date('1/1/2012'), new Date('12/31/2012')];
+                    }
+                    else if(value=="2013" && type=="Next")
+                      {
+                        this.xDomain = [new Date('1/1/2014'), new Date('12/31/2014')];
+                      }
+                    else if(value=="2014"  && type=="Previous")
+                      {
+                        this.xDomain = [new Date('1/1/2013'), new Date('12/31/2013')];
+                      }
+                      else if(value=="2014"  && type=="Next")
+                        {
+                          this.xDomain = [new Date('1/1/2015'), new Date('12/31/2015')];
+                        }
+                      else if(value=="2015"  && type=="Previous")
+                        {
+                          this.xDomain = [new Date('1/1/2014'), new Date('12/31/2014')];
+                        }
+                        else if(value=="2015"  && type=="Next")
+                          {
+                            this.xDomain = [new Date('1/1/2016'), new Date('12/31/2016')];
+                          }
+                        else if(value=="2016" && type=="Previous")
+                          {
+                            this.xDomain = [new Date('1/1/2015'), new Date('12/31/2015')];
+                          }
+                          else if(value=="2016" && type=="Next")
+                            {
+                              this.xDomain = [new Date('1/1/2017'), new Date('12/31/2017')];
+                            }
+                          else if(value=="2017" && type=="Previous")
+                            {
+                              this.xDomain = [new Date('1/1/2016'), new Date('12/31/2016')];
+                            }
+                            else if(value=="2017" && type=="Next")
+                              {
+                                //this.xDomain = [new Date('1/1/2018'), new Date('12/31/2018')];
+                                alert("range exceeded");
+                              }
+                            else if(value=="last3"  && type=="Previous"  && chartVal =="2015")
+                              {
+                                this.xDomain = [new Date('1/1/2012'), new Date('12/31/2014')];
+                              }
+                              else if(value=="last3"  && type=="Previous"  && chartVal =="2012")
+                                {
+                                  this.xDomain = [new Date('1/1/2009'), new Date('12/31/2011')];
+                                }
+                                else if(value=="last3"  && type=="Previous"  && chartVal =="2009")
+                                  {
+                                    alert("range exceeded");
+                                    //this.xDomain = [new Date('1/1/2008'), new Date('12/31/2010')];
+                                  }
+                              else if(value=="last3"  && type=="Next" && chartVal =="2015")
+                                {
+                                  //this.xDomain = [new Date('1/1/2011'), new Date('12/31/2014')];
+                                  alert("range exceeded");
+                                }
+                                else if(value=="last3"  && type=="Next" && chartVal =="2012")
+                                  {
+                                    this.xDomain = [new Date('1/1/2015'), new Date('12/31/2017')];
+                                    //alert("range exceeded");
+                                  }
+                                  else if(value=="last3"  && type=="Next" && chartVal =="2009")
+                                    {
+                                      this.xDomain = [new Date('1/1/2012'), new Date('12/31/2014')];
+                                      //alert("range exceeded");
+                                    }
+                              else if(value=="last5" && type=="Previous"  && chartVal =="2013")
+                                {
+                                  this.xDomain = [new Date('1/1/2008'), new Date('12/31/2012')];
+                                }
+                                else if(value=="last5" && type=="Previous"  && chartVal =="2008")
+                                  {
+                                    alert("range exceeded");
+                                    //this.xDomain = [new Date('1/1/2008'), new Date('12/31/2012')];
+                                  }
+                                else if(value=="last5"  && type=="Next" && chartVal =="2013")
+                                  {
+                                    //this.xDomain = [new Date('1/1/2011'), new Date('12/31/2014')];
+                                    alert("range exceeded");
+                                  }
+                                  else if(value=="last5"  && type=="Next" && chartVal =="2008")
+                                    {
+                                      this.xDomain = [new Date('1/1/2013'), new Date('12/31/2017')];
+                                      //alert("range exceeded");
+                                    }
+                                else if(value=="last10" && (type=="Previous" || type=="Next"))
+                                  {
+                                    alert("range exceeded");
+                                    //this.xDomain = [new Date('1/1/2007'), new Date('12/31/2017')];
+                                  }
+                                  else{
+                                    this.xDomain = [new Date('1/1/2007'), new Date()];
+                                  }
+                            //debugger;
+    
+    // update scales & axis
+    this.xScale.domain(this.xDomain);
+   
+    this.xAxis.transition().call(d3.axisBottom(this.xScale));
+   
+    this.lineA = d3.line<any>()
+    .x((d: any) => this.xScale(d.x))
+    .y((d: any) => this.yScaleA(d.y));
 
+    this.pathUpdate.datum(this.datasetA).attr("class", "lineA")
+    .attr("d", this.lineA);
+
+    //this.pathUpdate.pathUpdate();
+
+    var circles = this.chart.selectAll("circle")
+    .data(this.datasetA);
+    circles.exit().remove();
+
+    let update = this.chart.selectAll('.dotA')
+      .data(this.datasetA);
+
+    // remove exiting bars
+    update.exit().remove();
+
+
+      update
+      .data(this.datasetA)
+      .enter()
+      .append("circle")
+      .attr("class", "dotA")
+      .merge(update)
+      .attr("cx", d => this.xScale(d.x))
+      .attr("cy", d => this.yScaleA(d.y))
+      .attr("r", 5)
+      .on("mouseover", d => {
+        d3.select(d3.event.currentTarget).style("fill", "black");
+      })
+      .on("mouseout", d => {
+        d3.select(d3.event.currentTarget).style("fill", "#EA700D");
+      })
+      .on("click", d => {
+        alert(`X:${d.x} & Y:${d.y}`);
+      })
+  }
   updateChart(value) {
     
     if(value=="2007")
@@ -242,11 +463,14 @@ export class ChartsComponent implements OnInit, OnChanges {
                               }
                               else if(value=="last5")
                                 {
-                                  this.xDomain = [new Date('1/1/2012'), new Date('12/31/2017')];
+                                  this.xDomain = [new Date('1/1/2013'), new Date('12/31/2017')];
                                 }
                                 else if(value=="last10")
                                   {
-                                    this.xDomain = [new Date('1/1/2007'), new Date('12/31/2017')];
+                                    this.xDomain = [new Date('1/1/2008'), new Date('12/31/2017')];
+                                  }
+                                  else{
+                                    this.xDomain = [new Date('1/1/2007'), new Date()];
                                   }
                             //debugger;
     
@@ -262,20 +486,24 @@ export class ChartsComponent implements OnInit, OnChanges {
     this.pathUpdate.datum(this.datasetA).attr("class", "lineA")
     .attr("d", this.lineA);
 
-    this.pathUpdate.pathUpdate();
+    var circles = this.chart.selectAll("circle")
+    .data(this.datasetA);
+    circles.exit().remove();
+    //this.pathUpdate.pathUpdate();
 
     let update = this.chart.selectAll('.dotA')
       .data(this.datasetA);
 
-    // remove exiting bars
+    
     update.exit().remove();
-
+    
 
       update
       .data(this.datasetA)
       .enter()
-      //.append("circle")
+      .append("circle")
       .attr("class", "dotA")
+      .merge(update)
       .attr("cx", d => this.xScale(d.x))
       .attr("cy", d => this.yScaleA(d.y))
       .attr("r", 5)

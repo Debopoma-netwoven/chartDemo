@@ -11,3 +11,9 @@
   .d3-chart .axis text {
     fill: #999;
   }
+  .lineA
+  {
+    fill:none;
+    stroke-width:3px;
+    stroke:red
+  }

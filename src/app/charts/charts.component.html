@@ -16,6 +16,10 @@
     <option value="last10">Last 10 years</option>
 </select>
 <div class="d3-chart" #chart></div>
+<button type="button" style="margin-left:15px;" (click)="onClickEvent($event)">Previous</button>
+<button type="button" style="float:right;margin-right:15px;" (click)="onClickEvent($event)">Next</button>
+<!-- <input type="button" >Previous</input> -->
+
 <style> /* set the CSS */
 
 .line {
