@@ -1,5 +1,5 @@
-<table width="100%"><tr><td >
-<select id="years"(change)="onChangeEvent($event)" style="float:right;margin-right:50px;" >
+<table width="100%"><tr><td width="90%">
+<!-- <select id="years"(change)="onChangeEvent($event)" style="float:right;margin-right:10px;" >
         <option value="-1" selected="selected">None</option>
         <option value="2007">2007</option>
         <option value="2008">2008</option>
@@ -15,7 +15,13 @@
         <option value="last3">Last 3 years</option>
         <option value="last5">Last 5 years</option>
         <option value="last10">Last 10 years</option>
-    </select></td></tr></table>
+    </select> -->
+</td><td width="10%">
+        <p-menu #menu popup="popup" [model]="items"></p-menu>
+        <button type="button" pButton icon="fa fa-list"  label="Zoom" (click)="menu.toggle($event)">Zoom Scales</button>
+    </td>
+
+</tr></table>
 <div class="d3-chart" #chartParent style="margin-top:25px;">
    
     <app-barchart ></app-barchart>

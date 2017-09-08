@@ -62,6 +62,10 @@
         main: './main.ts',
         defaultExtension: 'ts'
       },
+      'moment': {
+        main: './moment.js',
+        defaultExtension: 'js'
+    },
       rxjs: {
         defaultExtension: 'js'
       },

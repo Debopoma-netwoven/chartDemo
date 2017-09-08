@@ -4,6 +4,10 @@ import { Component, OnInit,ElementRef,ViewChild,Input,ViewEncapsulation } from '
 import * as d3 from 'd3';
 import { ChartsComponent } from '../charts/charts.component';
 import { PiechartsComponent } from '../piecharts/piecharts.component';
+import {MenuModule,MenuItem} from 'primeng/primeng';
+//import { MomentModule } from 'angular2-moment';
+//import { Moment } from 'moment/moment';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-home',
@@ -33,7 +37,7 @@ export class HomeComponent implements OnInit {
   private yDomainA: Array<number> = [0, 60];
   @ViewChild(ChartsComponent) childChart:ChartsComponent;
   @ViewChild(PiechartsComponent) childPie:PiechartsComponent;
-
+  items: MenuItem[];
   constructor() { }
 
   ngOnInit() {
@@ -62,8 +66,40 @@ export class HomeComponent implements OnInit {
       .attr("transform", "translate(0," + this.height + ")")
       .call(d3.axisBottom(this.xScale)
       .tickFormat(d3.timeFormat('%x')));
-
+      
+      this.items = [
+        {label: '2 yrs', icon: 'fa-plus',  command: (event) => {
+          //debugger;
+          this.selectedType=event.item.label;
+          this.updateChartMenu(event.item.label);
+         
+      }},
+        {label: '1 yr', icon: 'fa-download', command: (event) => {
+         
+          this.selectedType=event.item.label;
+          this.updateChartMenu(event.item.label);
+      }},
+        {label: '6 M', icon: 'fa-refresh', command: (event) => {
+          
+          this.selectedType=event.item.label;
+          this.updateChartMenu(event.item.label);
+      }},
+        {label: '3 M', icon: 'fa-refresh', command: (event) => {
+        
+          this.selectedType=event.item.label;
+          this.updateChartMenu(event.item.label);
+      }},
+        {label: '1 M', icon: 'fa-refresh', command: (event) => {
+         
+          this.selectedType=event.item.label;
+          this.updateChartMenu(event.item.label);
+      }}
+    ];
   
+  }
+  itmClick(event)
+  {
+
   }
   onChangeEvent({target}){
     //debugger;
@@ -73,18 +109,106 @@ export class HomeComponent implements OnInit {
 }
 onClickEvent({target}){
   //debugger;
-  this.updateChartFromButton(target.value,target.textContent);
+ // this.updateChartFromButton(target.value,target.textContent);
+ this.updateChartFromButtonMenu(this.selectedType,target.textContent);
+ 
+}
+updateChartFromButtonMenu(value,type)
+{
+  if(value == "2 yrs" && type=="Previous")
+    {
+      let m = moment(this.xDomain[0]).add(-2, 'year').toDate();
+      
+       this.xDomain = [m, this.xDomain[0]];
+      //this.xDomain = [new Date('1/1/' + (this.xDomain[0].getFullYear() - 2).toString()), new Date('12/31/' + (this.xDomain[0].getFullYear() - 2).toString())];
+    }
+    else if(value == "2 yrs" && type=="Next")
+      {
+        let m = moment(this.xDomain[1]).add(2, 'year').toDate();
+        
+         this.xDomain = [this.xDomain[1],m];
+        //this.xDomain = [new Date('1/1/' + (this.xDomain[0].getFullYear() - 2).toString()), new Date('12/31/' + (this.xDomain[0].getFullYear() - 2).toString())];
+      }
+    else  if(value == "1 yr" && type=="Previous")
+      {
+        let m = moment(this.xDomain[0]).add(-1, 'year').toDate();
+        this.xDomain = [m, this.xDomain[0]];
+        // this.xDomain = [m, this.xDomain[0]];
+        //this.xDomain = [new Date('1/1/' + (this.xDomain[0].getFullYear() - 1).toString()), new Date('12/31/' + (this.xDomain[0].getFullYear() - 2).toString())];
+        
+      }
+      else  if(value == "1 yr" && type=="Next")
+        {
+          let m = moment(this.xDomain[1]).add(1, 'year').toDate();
+          this.xDomain = [this.xDomain[1],m];
+           //this.xDomain = [m, this.xDomain[0]];
+         // this.xDomain = [new Date('1/1/' + (this.xDomain[0].getFullYear() - 1).toString()), new Date('12/31/' + (this.xDomain[0].getFullYear() - 2).toString())];
+          
+        }
+      else  if(value == "6 M"  && type=="Previous")
+        {
+          
+          let m = moment(this.xDomain[0]).add(-6, 'month').toDate();
+          this.xDomain = [m, this.xDomain[0]];
+         // this.xDomain = [m, this.xDomain[0]];
+          
+        }
+        else  if(value == "6 M"  && type=="Next")
+          {
+            
+            let m = moment(this.xDomain[1]).add(6, 'month').toDate();
+            this.xDomain = [this.xDomain[1],m];
+           // this.xDomain = [m, this.xDomain[0]];
+            
+          }
+        else  if(value == "3 M" && type=="Previous")
+          {
+            
+            let m = moment(this.xDomain[0]).add(-3, 'month').toDate();
+            //this.xDomain = [new Date('1/'+ (this.xDomain[0].getMonth() - 3).toString() + '/' + (this.xDomain[0].getFullYear()).toString()), this.xDomain[0]];
+            this.xDomain = [m, this.xDomain[0]];
+          }
+          else  if(value == "3 M" && type=="Next")
+            {
+              
+              let m = moment(this.xDomain[1]).add(3, 'month').toDate();
+              //this.xDomain = [new Date('1/'+ (this.xDomain[0].getMonth() - 3).toString() + '/' + (this.xDomain[0].getFullYear()).toString()), this.xDomain[0]];
+              this.xDomain = [this.xDomain[1],m];
+            }
+          else  if(value == "1 M" && type=="Previous")
+            {
+             
+              let m = moment(this.xDomain[0]).add(-1, 'month').toDate();
+             // this.xDomain = [new Date('1/'+ (this.xDomain[0].getMonth() - 1).toString() + '/' + (this.xDomain[0].getFullYear()).toString()), this.xDomain[0]];
+             this.xDomain = [m, this.xDomain[0]];
+            }
+            else  if(value == "1 M" && type=="Next")
+              {
+               
+                let m = moment(this.xDomain[1]).add(1, 'month').toDate();
+                //this.xDomain = [new Date('1/'+ (this.xDomain[0].getMonth() - 1).toString() + '/' + (this.xDomain[0].getFullYear()).toString()), this.xDomain[0]];
+                this.xDomain = [this.xDomain[1],m];
+              }
+            this.xScale.domain(this.xDomain);
+            
+             this.xAxis.transition().call(d3.axisBottom(this.xScale));
+            
+             this.childChart.updateChartFromButton(value,type,this.xDomain);
+             this.childPie.updateChartFromButton(value,type,this.xDomain);
 }
 updateChartFromButton(value,type)
 {
- // debugger;
+ debugger;
+ //var moment = require('moment');
  value = this.selectedType;
   let chartVal =this.xDomain[0].getFullYear().toString();
-  if(value !="last3" &&  value !="last5" && value !="last10")
+ 
+  
+  if(value !="last3" &&  value !="last5" && value !="last10" && value )
     {
       value = chartVal;
     }
-  if(value=="2007" && type=="Previous")
+   if(value=="2007" && type=="Previous")
     {
       //this.xDomain = [new Date('1/1/2006'), new Date('12/31/2006')];
       alert("range exceeded");
@@ -226,7 +350,7 @@ updateChartFromButton(value,type)
                                   alert("range exceeded");
                                   //this.xDomain = [new Date('1/1/2007'), new Date('12/31/2017')];
                                 }
-                                else{
+                                else {
                                   this.xDomain = [new Date('1/1/2007'), new Date()];
                                   this.selectedType ="";
                                 }
@@ -242,6 +366,44 @@ updateChartFromButton(value,type)
 
   
 }
+updateChartMenu(value) {
+   //debugger;
+   if(value=="2 yrs")
+     {
+       this.xDomain = [new Date('1/1/2016'), new Date('12/31/2017')];
+     }
+     else if(value=="1 yr")
+       {
+         this.xDomain = [new Date('1/1/2017'), new Date('12/31/2017')];
+       }
+       else if(value=="6 M")
+         {
+           this.xDomain = [new Date('7/1/2017'), new Date('12/31/2017')];
+         }
+         else if(value=="3 M")
+             {
+               this.xDomain = [new Date('10/1/2017'), new Date('12/31/2017')];
+             }
+             else if(value=="1 M")
+               {
+                 this.xDomain = [new Date('12/1/2017'), new Date('12/31/2017')];
+               }
+               
+              else{
+                this.xDomain = [new Date('1/1/2007'), new Date()];
+              }
+                           //debugger;
+   
+   // update scales & axis
+   this.xScale.domain(this.xDomain);
+  
+   this.xAxis.transition().call(d3.axisBottom(this.xScale));
+  
+   this.childChart.updateChart(value,this.xDomain);
+   this.childPie.updateChart(value,this.xDomain);
+  }
+   
+ 
 updateChart(value) {
  // debugger;
   if(value=="2007")
