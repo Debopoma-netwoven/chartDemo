@@ -1,24 +1,30 @@
-<h3>Line point Chart</h3>
-<app-barchart *ngIf="chartData" [data]="chartData"></app-barchart>
-<!-- <h3>Pie Chart</h3>
-<div class="row">
-  <div class="col-md-5" style="width:400px; height:400px;">
-      <app-piecharts></app-piecharts>
-  </div>
-  <div class="col-md-7">
-      <table class="table table-striped">
-          <thead>
-              <tr>
-                  <td>Label</td>
-                  <td>Value</td>
-              </tr>
-          </thead>
-          <tbody>
-              <tr *ngFor="let d of data">
-                  <td [innerHTML]="d.label"></td>
-                  <td [innerHTML]="d.value"></td>
-              </tr>
-          </tbody>
-      </table>
-  </div>
-</div> -->
+<table width="100%"><tr><td >
+<select id="years"(change)="onChangeEvent($event)" style="float:right;margin-right:50px;" >
+        <option value="-1" selected="selected">None</option>
+        <option value="2007">2007</option>
+        <option value="2008">2008</option>
+        <option value="2009">2009</option>
+        <option value="2010">2010</option>
+        <option value="2011">2011</option>
+        <option value="2012">2012</option>
+        <option value="2013">2013</option>
+        <option value="2014">2014</option>
+        <option value="2015">2015</option>
+        <option value="2016">2016</option>
+        <option value="2017">2017</option>
+        <option value="last3">Last 3 years</option>
+        <option value="last5">Last 5 years</option>
+        <option value="last10">Last 10 years</option>
+    </select></td></tr></table>
+<div class="d3-chart" #chartParent style="margin-top:25px;">
+   
+    <app-barchart ></app-barchart>
+    <app-piecharts  ></app-piecharts>
+  
+
+</div>
+
+<button type="button" id="btnPrev" style="margin-left:15px;" (click)="onClickEvent($event)">Previous</button> 
+<button type="button" id="btnNext"  (click)="onClickEvent($event)">Next</button>
+
+

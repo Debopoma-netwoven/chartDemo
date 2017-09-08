@@ -1,103 +1,232 @@
-import { Component, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
-import { IData } from '../data.interface';
-import { DataService } from '../data.service';
-import * as D3 from "d3";
+import { Component, OnInit, ViewChild, ElementRef, Input, ViewEncapsulation } from '@angular/core';
+import * as d3 from 'd3';
 
 @Component({
   selector: 'app-piecharts',
   templateUrl: './piecharts.component.html',
   styleUrls: ['./piecharts.component.css'],
-  providers:[DataService]
+  //providers:[DataService]
 })
-export class PiechartsComponent implements AfterViewInit {
-
-  @ViewChild("containerPieChart") element: ElementRef;
+export class PiechartsComponent implements OnInit {
+    @ViewChild('chart2') private chartContainer: ElementRef;
+   // @Input() private data: Array<any>;
+    private margin: any = { top: 20, bottom: 20, left: 20, right: 20};
+    private chart: any;
+    private width: number;
+    private height: number;
+    private xScale: any;
+    private yScale: any;
+    //private colors: any;
+    private xAxis: any;
+    private yAxis: any;
+    private state:any;
+    //private selectedType: string;
+    private yScaleA: any;
+    private yScaleB: any;
+   // private xAxisUpdate: any;
+    //private yAxisUpdate: any;
+    private pathUpdate: any;
+    private lineA: any;
   
-      private host: D3.Selection<any,any,any,any>;
-      private svg: D3.Selection<any,any,any,any>;
-      private width: number;
-      private height: number;
-      private radius: number;
-      private htmlElement: HTMLElement;
-      private pieData: IData[];
+    private xDomain: Array<Date> = [new Date('1/1/2007'), new Date()];
+    private yDomainA: Array<number> = [0, 60];
+    //private yDomainB: Array<number> = [0, 100];
   
-      constructor(private dataService: DataService) { }
+    private datasetA: Array<any> = [
+      { "x": new Date('1/1/2007'), "y": 60},
+      { "x": new Date('3/4/2007'), "y": 59 },
+      { "x": new Date('6/5/2007'), "y": 58 },
+      { "x": new Date('7/7/2008'), "y": 57 },
+      { "x": new Date('9/10/2008'), "y": 56 },
+      { "x": new Date('3/4/2009'), "y": 54 },
+      { "x": new Date('4/5/2010'), "y": 52 },
+      { "x": new Date('11/11/2010'), "y": 51 },
+      { "x": new Date('9/3/2011'), "y": 50},
+      { "x": new Date('10/8/2011'), "y": 44 },
+      { "x": new Date('3/4/2012'), "y": 41 },
+      { "x": new Date('5/6/2012'), "y": 39 },
+      { "x": new Date('1/1/2013'), "y": 36 },
+      { "x": new Date('3/5/2013'), "y": 33 },
+      { "x": new Date('8/4/2014'), "y": 31 },
+      { "x": new Date('11/11/2015'), "y": 26},
+      { "x": new Date('1/3/2016'), "y": 22 },
+      { "x": new Date('5/5/2016'), "y": 19},
+      { "x": new Date('8/9/2016'), "y": 16 },
+      { "x": new Date('5/5/2017'), "y": 12 },
+      { "x": new Date('8/8/2017'), "y": 10 },
+      { "x": new Date('11/10/2017'), "y": 5 }
+    ];
   
-      ngAfterViewInit() {
-          this.htmlElement = this.element.nativeElement;
-          this.host = D3.select(this.htmlElement);
-          this.dataService.$data.subscribe(data => {
-              this.pieData = data;
-              this.setup();
-              this.buildSVG();
-              this.buildPie();
-          });
-      }
+   
+    constructor() { }
   
-      private setup(): void {
-          this.width = 250;
-          this.height = 250;
-          this.radius = Math.min(this.width, this.height) / 2;
-      }
+    ngOnInit() {
+      //debugger;
+      this.createChart();
+    
+    }
   
-      private buildSVG(): void {
-          this.host.html("");
-          this.svg = this.host.append("svg")
-              .attr("viewBox", `0 0 ${this.width} ${this.height}`)
-              .append("g")
-              .attr("transform", `translate(${this.width / 2},${this.height / 2})`);
-      }
+   
+    createChart() {
+      //debugger;
+      //bar chart
+      let element = this.chartContainer.nativeElement;
+      this.width =Math.abs(element.offsetWidth - this.margin.left - this.margin.right);
+      this.height = Math.abs(element.offsetHeight - this.margin.top - this.margin.bottom);
+      let svg = d3.select(element).append('svg')
+        .attr('width', element.offsetWidth)
+        .attr('height', element.offsetHeight);
   
-      private buildPie(): void {
-          let pie = D3.pie();
-          let values = this.pieData.map(data => data.value);
-          let arcSelection = this.svg.selectAll(".arc")
-              .data(pie(values))
-              .enter()
-              .append("g")
-              .attr("class", "arc");
-              let innerRadius = this.radius - 50;
-              let outerRadius = this.radius - 10;
-              let pieColor = D3.schemeCategory20;
-              let arc = D3.arc<D3.PieArcDatum<number>>()
-                  .outerRadius(outerRadius);
-              arcSelection.append("path")
-                  .attr("d", arc)
-                  .attr("fill", (datum, index) => {
-                    return pieColor[this.pieData[index].label];
-                });
+      // // chart plot area
+      this.chart = svg.append('g')
+        .attr('class', 'bars')
+        .attr('transform', `translate(${this.margin.left}, ${this.margin.top})`);
+  
+  
+      this.xScale = d3.scaleTime().domain(this.xDomain).range([0, this.width]);
+      this.yScaleA = d3.scaleLinear().domain(this.yDomainA).range([this.height, 0]);
+      //this.yScaleB = d3.scaleLinear().domain(this.yDomainB).range([this.height, 0]);
+  
+       this.lineA = d3.line<any>()
+        .x((d: any) => this.xScale(d.x))
+        .y((d: any) => this.yScaleA(d.y));
+  
       
-              arcSelection.append("text")
-                  .attr("transform", (datum: any) => {
-                      datum.innerRadius = 0;
-                      datum.outerRadius = outerRadius;
-                      return "translate(" + arc.centroid(datum) + ")";
-                  })
-                  .text((datum, index) => this.pieData[index].label)
-                  .style("text-anchor", "middle");
-          //this.populatePie(arcSelection);
-      }
+      this.xAxis = this.chart.append("g")
+        .attr("class", "x axis disX")
+        .attr("transform", "translate(0," + this.height + ")")
+        .call(d3.axisBottom(this.xScale)
+        .tickFormat(d3.timeFormat('%x')));
   
-      // private populatePie(arcSelection: D3.Selection<any,D3.PieArcDatum<number>,any,any>): void {
+    //this.xAxisUpdate = svg.selectAll(".x axis");
+  
+      this.yAxis = this.chart.append("g")
+        .attr("class", "ya axis")
+        .attr("transform", "translate(" + Math.abs(this.width + 19).toString() + " ,0)")	
+        .call(d3.axisLeft(this.yScaleA));
+  
+      this.pathUpdate = this.chart.append("path")
+        .datum(this.datasetA)
+        .attr("class", "lineA")
+        .attr("d", this.lineA);
+  
+  
+      this.state=this.chart.selectAll(".dotA")
+        .data(this.datasetA)
+        .enter()
+        .append("circle")
+        .attr("class", "dotA")
+        .attr("cx", d => this.xScale(d.x))
+        .attr("cy", d => this.yScaleA(d.y))
+        .attr("r", 5)
+        .on("mouseover", d => {
+          d3.select(d3.event.currentTarget).style("fill", "black");
+        })
+        .on("mouseout", d => {
+          d3.select(d3.event.currentTarget).style("fill", "#EA700D");
+        })
+        .on("click", d => {
+          alert(`X:${d.x} & Y:${d.y}`);
+        })
+  
         
-      //     let innerRadius = this.radius - 50;
-      //     let outerRadius = this.radius - 10;
-      //     let pieColor = D3.schemeCategory20;
-      //     let arc = D3.arc<D3.PieArcDatum<number>>()
-      //         .outerRadius(outerRadius);
-      //     arcSelection.append("path")
-      //         .attr("d", arc)
-      //         .attr("fill", (datum, index) => {
-      //           return pieColor[this.pieData[index].label];
-      //       });
+    }
+    updateChartFromButton(value,type,dom)
+    {
+      
+      
+      // // update scales & axis
+      this.xScale.domain(dom);
+     
+      this.xAxis.transition().call(d3.axisBottom(this.xScale));
+     
+      this.lineA = d3.line<any>()
+      .x((d: any) => this.xScale(d.x))
+      .y((d: any) => this.yScaleA(d.y));
   
-      //     arcSelection.append("text")
-      //         .attr("transform", (datum: any) => {
-      //             datum.innerRadius = 0;
-      //             datum.outerRadius = outerRadius;
-      //             return "translate(" + arc.centroid(datum) + ")";
-      //         })
-      //         .text((datum, index) => this.pieData[index].label)
-      //         .style("text-anchor", "middle");
-      // }
+      this.pathUpdate.datum(this.datasetA).attr("class", "lineA")
+      .attr("d", this.lineA);
+  
+      //this.pathUpdate.pathUpdate();
+  
+      var circles = this.chart.selectAll("circle")
+      .data(this.datasetA);
+      circles.exit().remove();
+      //this.pathUpdate.pathUpdate();
+  
+      let update = this.chart.selectAll('.dotA')
+        .data(this.datasetA);
+  
+      
+      update.exit().remove();
+      
+  
+        update
+        .data(this.datasetA)
+        .enter()
+        .append("circle")
+        .attr("class", "dotA")
+        .merge(update)
+        .attr("class", "dotA")
+        .attr("cx", d => this.xScale(d.x))
+        .attr("cy", d => this.yScaleA(d.y))
+        .attr("r", 5)
+        .on("mouseover", d => {
+          d3.select(d3.event.currentTarget).style("fill", "black");
+        })
+        .on("mouseout", d => {
+          d3.select(d3.event.currentTarget).style("fill", "#EA700D");
+        })
+        .on("click", d => {
+          alert(`X:${d.x} & Y:${d.y}`);
+        })
+    }
+    updateChart(value,dom) {
+      
+      
+      
+      // // update scales & axis
+      this.xScale.domain(dom);
+     
+      this.xAxis.transition().call(d3.axisBottom(this.xScale));
+     
+      this.lineA = d3.line<any>()
+      .x((d: any) => this.xScale(d.x))
+      .y((d: any) => this.yScaleA(d.y));
+  
+      this.pathUpdate.datum(this.datasetA).attr("class", "lineA")
+      .attr("d", this.lineA);
+  
+      var circles = this.chart.selectAll("circle")
+      .data(this.datasetA);
+      circles.exit().remove();
+      //this.pathUpdate.pathUpdate();
+  
+      let update = this.chart.selectAll('.dotA')
+        .data(this.datasetA);
+  
+      
+      update.exit().remove();
+      
+  
+        update
+        .data(this.datasetA)
+        .enter()
+        .append("circle")
+        .attr("class", "dotA")
+        .merge(update)
+        .attr("cx", d => this.xScale(d.x))
+        .attr("cy", d => this.yScaleA(d.y))
+        .attr("r", 5)
+        .on("mouseover", d => {
+          d3.select(d3.event.currentTarget).style("fill", "black");
+        })
+        .on("mouseout", d => {
+          d3.select(d3.event.currentTarget).style("fill", "#EA700D");
+        })
+        .on("click", d => {
+          alert(`X:${d.x} & Y:${d.y}`);
+        })
+      
+     }
   }
