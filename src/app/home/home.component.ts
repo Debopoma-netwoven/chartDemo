@@ -68,6 +68,8 @@ export class HomeComponent implements OnInit {
       .tickFormat(d3.timeFormat('%x')));
       
       this.items = [
+        {label: 'Zoom Scales', icon: 'fa-plus'},
+        {label: 'Zoom Scales', icon: 'fa-plus',separator:true},
         {label: '2 yrs', icon: 'fa-plus',  command: (event) => {
           //debugger;
           this.selectedType=event.item.label;
