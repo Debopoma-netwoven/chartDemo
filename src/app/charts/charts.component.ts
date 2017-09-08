@@ -58,7 +58,8 @@ export class ChartsComponent implements OnInit {
     { "x": new Date('3/4/2016'), "y": 55 },
     { "x": new Date('6/5/2016'), "y": 58 },
     { "x": new Date('2/8/2017'), "y": 59 },
-    { "x": new Date('5/10/2017'), "y": 60 }
+    { "x": new Date('5/10/2017'), "y": 60 },
+    { "x": new Date('12/12/2017'), "y": 60 }
   ];
 
  
