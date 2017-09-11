@@ -1,4 +1,4 @@
-<table width="100%"><tr><td width="90%">
+<table width="100%"><tr><td width="80%">
 <!-- <select id="years"(change)="onChangeEvent($event)" style="float:right;margin-right:10px;" >
         <option value="-1" selected="selected">None</option>
         <option value="2007">2007</option>
@@ -20,6 +20,23 @@
         <p-menu #menu popup="popup" [model]="items"></p-menu>
         <button type="button" pButton icon="fa fa-list"  label="Zoom" (click)="menu.toggle($event)">Zoom</button>
     </td>
+    <td width="10%">
+        <div class="btn-group" dropdown>
+            <button dropdownToggle type="button" class="btn btn-primary dropdown-toggle">
+             Zoom <span class="caret"></span>
+            </button>
+            <ul *dropdownMenu class="dropdown-menu" role="menu">
+              <li role="menuitem"><a class="dropdown-item" href="#">Zoom Scale</a></li>
+              <li class="divider dropdown-divider"></li>
+              <li role="menuitem"><a class="dropdown-item" href="#" (click)="menuClick('2 yrs')">2 yrs</a></li>
+              <li role="menuitem"><a class="dropdown-item" href="#" (click)="menuClick('1 yr')">1 yr</a></li>
+              <li role="menuitem"><a class="dropdown-item" href="#" (click)="menuClick('6 M')">6 months</a>
+              <li role="menuitem"><a class="dropdown-item" href="#" (click)="menuClick('3 M')">3 months</a>
+              <li role="menuitem"><a class="dropdown-item" href="#" (click)="menuClick('1 M')">1 months</a>
+              </li>
+            </ul>
+          </div>
+    </td>
 
 </tr></table>
 <div class="d3-chart" #chartParent style="margin-top:25px;">
@@ -32,5 +49,6 @@
 
 <button type="button" id="btnPrev" style="margin-left:15px;" (click)="onClickEvent($event)">Previous</button> 
 <button type="button" id="btnNext"  (click)="onClickEvent($event)">Next</button>
+
 
 

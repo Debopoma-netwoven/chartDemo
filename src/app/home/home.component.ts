@@ -39,7 +39,13 @@ export class HomeComponent implements OnInit {
   @ViewChild(PiechartsComponent) childPie:PiechartsComponent;
   items: MenuItem[];
   constructor() { }
-
+  menuClick(txt)
+  {
+      //debugger;
+      //alert(txt)
+      this.selectedType=txt;
+      this.updateChartMenu(txt);
+  }
   ngOnInit() {
     
     let element = this.chartContainer.nativeElement;

@@ -11,6 +11,7 @@ import { routing, appRoutingProviders } from './app.routes';
 import { PiechartsComponent } from './piecharts/piecharts.component';
 import {MenuModule} from 'primeng/primeng';
 import {MenuItem} from 'primeng/components/common/api';  
+import { BsDropdownModule } from 'ngx-bootstrap';
 //import { MomentModule } from 'angular2-moment';
 //import { DataService }  from './data.service';
 
@@ -27,7 +28,8 @@ import {MenuItem} from 'primeng/components/common/api';
     FormsModule,
     HttpModule,
     routing,
-    MenuModule//,
+    MenuModule,
+    BsDropdownModule.forRoot()
     //MomentModule
     //MenuItem,
     
